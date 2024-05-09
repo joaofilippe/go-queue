@@ -11,11 +11,29 @@
     <style>
         .text-field {
             display: block;
+            width: 400px;
         }
 
         .button-send {
             display: block;
             margin-top: 1em;
+        }
+
+        .symptoms {
+            margin-top: 5px;
+            margin-bottom: 20px;
+        }
+
+        .others {
+            display: block;
+        }
+
+        .others-txt {
+            display: block;
+            text-align: initial;
+            height: 100px;
+            width: 100px;
+            resize: both;
         }
     </style>
 </head>
@@ -26,12 +44,41 @@
     </header>
     <form action="/enter" method="POST">
         <input class="text-field" type="text" name="name" placeholder="Nome Completo">
-        <input class="text-field" type="text" name="cpf" placeholder="CPF">
+        <input class="text-field" type="text" name="cpf" id="cpf" placeholder="CPF">
         <input class="text-field" type="text" name="phone" placeholder="Celular">
         <input type="checkbox" name="priority" title="priority">Prioritário</input>
+        <p>Por favor, informe se você possui ou já apresentou as condições a seguir:</p>
+        <div class="symptoms">
+            <div> <input type="checkbox" name="temperature" title="temperature">Febre acima de 36,6ºC</input> </div>
+            <div> <input type="checkbox" name="nausea" title="nausea">Vômito</input> </div>
+            <div> <input type="checkbox" name="headache" title="headache">Dor de cabeça</input> </div>
+            <div> <input type="checkbox" name="throat" title="throat">Dor na garganta</input> </div>
+            <div> <input type="checkbox" name="heart" title="heart">Aperto no lado esquerdo do peito</input> </div>
+            <div> <input type="checkbox" name="air" title="air">Falta de ar</input> </div>
+            <div> <input type="checkbox" name="hypertension" title="hypertension">Hipertensão</input> </div>
+            <div> <input type="checkbox" name="blood_pressure" title="blood_pressure">Pressão Baixa</input> </div>
+            <div> <input type="checkbox" name="vertigo" title="vertigo">Tontura</input> </div>
+            <div> <input type="checkbox" name="heart-disease" title="heart-disease">Problema no coração</input> </div>
+            <div> <input type="checkbox" name="alergy" title="alergy">Alergia a medicamentos</input> </div>
+            <div> <input type="checkbox" name="diabetes" title="diabetes">Diabetes</input> </div>
+        </div>
+        <label class="others" for="others">Caso necessite, descreva mais abaixo:</label>
+        <textarea title="others" name="others" rows="6" cols="50"></textarea><br>
         <button class="button-send" type="submit">Enviar</button>
     </form>
 
 </body>
+<script>
+    const cpf = document.getElementById('cpf')
+    cpf.addEventListener('keypress', (e) => {
+        let l = cpf.value.length
+
+        if (l === 3 || l === 7) {
+            cpf.value += '.'
+        } else if (l === 11) {
+            cpf.value += '-'
+        }
+    })
+</script>
 
 </html>

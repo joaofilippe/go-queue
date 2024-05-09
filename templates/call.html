@@ -20,11 +20,18 @@
     <div>
         <p>Próximo paciente</p>
         <p>Nome: {{.Name}}</p>
+
+        <div>
+            <p>Lista dos proximos:</p>
+            <ol>
+                {{range .Next}}
+                <li>{{.Name}}</li>
+                {{end}}
+        </div>
         <form>
             <input type="text" placeholder="Código de autorização" />
             <button type="submit"F>Chamar</button>
         </form>
     </div>
 </body>
-
 </html>
