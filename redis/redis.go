@@ -4,6 +4,7 @@ import (
 	"context"
 	"crypto/tls"
 	"encoding/json"
+	"fmt"
 	"os"
 	"strings"
 
@@ -26,6 +27,9 @@ func LoadRedisClient(ctx context.Context) {
 			InsecureSkipVerify: true,
 		}
 	}
+	fmt.Println(uri)
+	fmt.Println(opts)
+	fmt.Println(&opts)
 	rCli := redis.NewClient(opts)
 
 	qStd := models.UserQueue{}
