@@ -65,7 +65,7 @@ func GetQueueFromRedis(ctx context.Context, key string) *models.UserQueue {
 	result := rCli.Get(ctx, key)
 	queueStr, err := result.Result()
 	if err != nil {
-		println(err)
+		panic(err)
 	}
 
 	queue := new(models.UserQueue)
