@@ -18,6 +18,8 @@ func LoadRedisClient(ctx context.Context) {
 
 	qStd := models.UserQueue{}
 	qPri := models.UserQueue{}
+	qOne := models.UserQueue{}
+	qTwo := models.UserQueue{}
 
 	jsonQStd, err := json.Marshal(qStd)
 	if err != nil {
@@ -27,9 +29,19 @@ func LoadRedisClient(ctx context.Context) {
 	if err != nil {
 		println(err)
 	}
+	jsonQOne, err := json.Marshal(qOne)
+	if err != nil {
+		println(err)
+	}
+	jsonQTwo, err := json.Marshal(qTwo)
+	if err != nil {
+		println(err)
+	}
 
 	rCli.Set(ctx, "standart", string(jsonQStd), 0)
 	rCli.Set(ctx, "priority", string(jsonQPri), 0)
+	rCli.Set(ctx, "priority", string(jsonQOne), 0)
+	rCli.Set(ctx, "priority", string(jsonQTwo), 0)
 }
 
 // GetQueueFromRedis gets the queue from redis-cli
@@ -48,7 +60,7 @@ func GetQueueFromRedis(ctx context.Context, key string) *models.UserQueue {
 }
 
 // SendQueueToRedis sends the new queue to Redis
-func SendQueueToRedis(ctx context.Context, queue *models.UserQueue) {
+func SendQueueToRedis(ctx context.Context, queue *models.UserQueue, key string) {
 	res, _ := json.Marshal(queue)
-	rCli.Set(ctx, "standart", string(res), 0)
+	rCli.Set(ctx, key, string(res), 0)
 }

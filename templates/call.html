@@ -5,33 +5,62 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <style>
-        input{
-            display: block;
-        }
-    </style>
+    <link rel="stylesheet" href="./call.css">
 </head>
 
 <body>
     <header>
-        <h1>Call Page</h1>
+        <h1>Chamar Paciente</h1>
     </header>
-
-    <div>
-        <p>Próximo paciente</p>
-        <p>Nome: {{.Name}}</p>
-
-        <div>
-            <p>Lista dos proximos:</p>
-            <ol>
-                {{range .Next}}
-                <li>{{.Name}}</li>
-                {{end}}
+    <div class="screen">
+        <div class="call">
+            <div>
+                <p>Próximo paciente</p>
+                <p>Nome: {{ .Name}}</p>
+                <form>
+                    <input type="text" placeholder="Código de autorização" />
+                    <button type="submit" F>Chamar</button>
+                </form>
+            </div>
+            <div class="next">
+                <p>Próximos pacientes</p>
+                <ol>
+                    {{ range .Next }}
+                    <li>{{ .Name }}</li>
+                    {{ end }}
+                </ol>
+            </div>
         </div>
-        <form>
-            <input type="text" placeholder="Código de autorização" />
-            <button type="submit"F>Chamar</button>
-        </form>
     </div>
+
+    <script>
+        code = window.prompt('Digite o código de autorização')
+
+        if (code != 5654){
+            alert('Código inválido')
+            window.location.href = '/call'
+        } 
+
+        const form = document.querySelector('form');
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const input = form.querySelector('input');
+            const code = input.value;
+            const f = '/call/' + code;
+            console.log(f);
+            fetch('/call/' + code, {
+                method: 'DELETE',
+            }).then(res => {
+                if (res.ok) {
+                    alert('Paciente chamado');
+                    location.reload();
+                } else {
+                    alert('Erro ao chamar paciente');
+                    location.reload();
+                }
+            });
+        });
+    </script>
 </body>
+
 </html>

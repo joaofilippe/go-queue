@@ -1,0 +1,51 @@
+header {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+
+}
+
+.text-field {
+    display: block;
+    width: 400px;
+}
+
+.button-send {
+    display: block;
+    margin-top: 1em;
+}
+
+.symptoms {
+    margin-top: 5px;
+    margin-bottom: 20px;
+}
+
+.others {
+    display: block;
+}
+
+.others-txt {
+    display: block;
+    text-align: initial;
+    height: 100px;
+    width: 100px;
+    resize: both;
+}
+
+.check {
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+}
+
+.form-enter{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}

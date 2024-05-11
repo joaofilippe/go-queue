@@ -19,10 +19,13 @@ func main() {
 
 	e := echo.New()
 	e.GET("/", handlers.HomeScreen)
-	e.GET("/queue", handlers.GetQueue)
-	e.GET("/admin/:code", handlers.ValidateAdmin)
 	e.POST("/enter", handlers.EnterOnQueue)
-	e.DELETE("/call", handlers.CallNext)
+	e.GET("/queue", handlers.GetQueue)
+	e.GET("/user/:id", handlers.GetPlaceOnListByID)
+	e.GET("/place/:id", handlers.GetPlaceOnListByIDScreen)
+	e.GET("/call", handlers.CallNextScreen)
+	e.GET("/see", handlers.SeePatients)
+	e.DELETE("/call/:code", handlers.CallNext)
 
 	e.Start(":8000")
 }
