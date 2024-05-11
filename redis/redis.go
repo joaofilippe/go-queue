@@ -16,27 +16,17 @@ var rCli *redis.Client
 
 func LoadRedisClient(ctx context.Context) {
 	uri := os.Getenv("REDIS_URL")
-	opts := new(redis.Options)
-
-	if uri != "" {
-		opts, err := redis.ParseURL(uri)
-		if err != nil {
-			panic(err)
-		}
-
-		if strings.HasPrefix(uri, "rediss") {
-			opts.TLSConfig = &tls.Config{
-				InsecureSkipVerify: true,
-			}
-		}
-	} else {
-		uri = "localhost:6379"
-		opts = &redis.Options{
-			Addr: uri,
-		}
+	opts, err := redis.ParseURL(uri)
+	if err != nil {
+		panic(err)
 	}
 
-	rCli = redis.NewClient(opts)
+	if strings.HasPrefix(uri, "rediss") {
+		opts.TLSConfig = &tls.Config{
+			InsecureSkipVerify: true,
+		}
+	}
+	rdb := redis.NewClient(opts)
 
 	qStd := models.UserQueue{}
 	qPri := models.UserQueue{}

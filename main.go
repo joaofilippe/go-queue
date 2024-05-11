@@ -38,10 +38,3 @@ func main() {
 	}
 }
 
-// criar um id ao invés de usar o CPF na params
-// criar a página para o usuário ver sua posição na fila
-// inserir na página de chamar uma lista para o funcionário ver os próximos 5 da fila
-// inserir mais informações para a triagem
-// o que se encaixa no prioritário (pcd, gestante, recém-nascido e idoso)
-
-// whish: possibilitar que o funcionário altere o grau de prioridade do usuário
