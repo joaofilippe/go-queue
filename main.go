@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"os"
 
 	"github.com/labstack/echo/v4"
 
@@ -27,7 +28,11 @@ func main() {
 	e.GET("/see", handlers.SeePatients)
 	e.DELETE("/call/:code", handlers.CallNext)
 
-	e.Start(":8000")
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = ":8000"
+	}
+	e.Start(port)
 }
 
 // criar um id ao invés de usar o CPF na params
