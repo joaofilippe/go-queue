@@ -26,7 +26,7 @@ func LoadRedisClient(ctx context.Context) {
 			InsecureSkipVerify: true,
 		}
 	}
-	rdb := redis.NewClient(opts)
+	rCli := redis.NewClient(opts)
 
 	qStd := models.UserQueue{}
 	qPri := models.UserQueue{}
