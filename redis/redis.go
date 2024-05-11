@@ -4,7 +4,6 @@ import (
 	"context"
 	"crypto/tls"
 	"encoding/json"
-	"fmt"
 	"os"
 	"strings"
 
@@ -16,7 +15,7 @@ import (
 var rCli *redis.Client
 
 func LoadRedisClient(ctx context.Context) {
-	uri := os.Getenv("REDIS_URL")
+	uri := os.Getenv("REDIS_TLS_URL")
 	opts, err := redis.ParseURL(uri)
 	if err != nil {
 		panic(err)
@@ -27,9 +26,7 @@ func LoadRedisClient(ctx context.Context) {
 			InsecureSkipVerify: true,
 		}
 	}
-	fmt.Println(uri)
-	fmt.Println(opts)
-	fmt.Println(&opts)
+
 	rCli := redis.NewClient(opts)
 
 	qStd := models.UserQueue{}
