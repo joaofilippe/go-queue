@@ -32,7 +32,7 @@ func main() {
 	if port == "" {
 		port = ":8000"
 	}
-	err := e.Start(port)
+	err := e.Start(":" +port)
 	if err != nil {
 		panic(err)
 	}
