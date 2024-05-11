@@ -2,8 +2,10 @@ package redisclient
 
 import (
 	"context"
+	"crypto/tls"
 	"encoding/json"
 	"os"
+	"strings"
 
 	"github.com/redis/go-redis/v9"
 
@@ -13,13 +15,18 @@ import (
 var rCli *redis.Client
 
 func LoadRedisClient(ctx context.Context) {
-	uri := os.Getenv("REDIS_TLS_URL")
+	uri := os.Getenv("REDIS_URL")
 	opts, err := redis.ParseURL(uri)
 	if err != nil {
 		panic(err)
 	}
 
-	rCli := redis.NewClient(opts)
+	if strings.HasPrefix(uri, "rediss") {
+		opts.TLSConfig = &tls.Config{
+			InsecureSkipVerify: true,
+		}
+	}
+	rCli = redis.NewClient(opts)
 
 	qStd := models.UserQueue{}
 	qPri := models.UserQueue{}
@@ -54,7 +61,7 @@ func GetQueueFromRedis(ctx context.Context, key string) *models.UserQueue {
 	result := rCli.Get(ctx, key)
 	queueStr, err := result.Result()
 	if err != nil {
-		panic(err)
+		println(err)
 	}
 
 	queue := new(models.UserQueue)
@@ -67,8 +74,5 @@ func GetQueueFromRedis(ctx context.Context, key string) *models.UserQueue {
 // SendQueueToRedis sends the new queue to Redis
 func SendQueueToRedis(ctx context.Context, queue *models.UserQueue, key string) {
 	res, _ := json.Marshal(queue)
-	err := rCli.Set(ctx, key, string(res), 0)
-	if err != nil {
-		println(err)
-	}
+	rCli.Set(ctx, key, string(res), 0)
 }
