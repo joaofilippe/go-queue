@@ -32,7 +32,10 @@ func main() {
 	if port == "" {
 		port = ":8000"
 	}
-	e.Start(port)
+	err := e.Start(port)
+	if err != nil {
+		panic(err)
+	}
 }
 
 // criar um id ao invés de usar o CPF na params
