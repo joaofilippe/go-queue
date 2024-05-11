@@ -78,5 +78,8 @@ func GetQueueFromRedis(ctx context.Context, key string) *models.UserQueue {
 // SendQueueToRedis sends the new queue to Redis
 func SendQueueToRedis(ctx context.Context, queue *models.UserQueue, key string) {
 	res, _ := json.Marshal(queue)
-	rCli.Set(ctx, key, string(res), 0)
+	err := rCli.Set(ctx, key, string(res), 0)
+	if err != nil {
+		println(err)
+	}
 }
