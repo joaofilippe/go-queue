@@ -2,7 +2,10 @@ package redisclient
 
 import (
 	"context"
+	"crypto/tls"
 	"encoding/json"
+	"os"
+	"strings"
 
 	"github.com/redis/go-redis/v9"
 
@@ -12,9 +15,28 @@ import (
 var rCli *redis.Client
 
 func LoadRedisClient(ctx context.Context) {
-	rCli = redis.NewClient(&redis.Options{
-		Addr: "localhost:6379",
-	})
+	uri := os.Getenv("REDIS_URL")
+	opts := new(redis.Options)
+
+	if uri != "" {
+		opts, err := redis.ParseURL(uri)
+		if err != nil {
+			panic(err)
+		}
+
+		if strings.HasPrefix(uri, "rediss") {
+			opts.TLSConfig = &tls.Config{
+				InsecureSkipVerify: true,
+			}
+		}
+	} else {
+		uri = "localhost:6379"
+		opts = &redis.Options{
+			Addr: uri,
+		}
+	}
+
+	rCli = redis.NewClient(opts)
 
 	qStd := models.UserQueue{}
 	qPri := models.UserQueue{}
