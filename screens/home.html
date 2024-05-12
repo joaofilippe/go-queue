@@ -19,7 +19,7 @@
             <input class="text-field" type="text" name="name" placeholder="Nome Completo">
             <input class="text-field" type="text" name="cpf" id="cpf" placeholder="CPF">
             <input class="text-field" type="text" name="phone" placeholder="Celular">
-            <input type="checkbox" name="priority" title="priority">Prioritário</input>
+            <input type="checkbox" name="priority" title="priority">Prioritário*</input>
             <p>Por favor, informe se você possui ou já apresentou as condições a seguir:</p>
             <div class="symptoms">
                 <div> <input type="checkbox" name="fever" title="fever">Febre acima de 36,6ºC</input> </div>
@@ -39,10 +39,12 @@
             <textarea title="others" name="others" rows="6" cols="50"></textarea><br>
             <button class="button-send" type="submit">Enviar</button>
         </form>
+        <div>* Ao me declarar como paciente prioritário, estou consciente que estou dentro da legislação vigente atual, as quais são pessoas com deficiência, idosos a partir dos 60 anos, gestantes, lactantes, pessoas com crianças de colo e pessoas obesas, possuindo total responsabilidade sobre a informação e ficando sujeita à reclassificação por parte do profissional.</div>
         <br />
         <div>
+            <p>Se você já fez o cadastro, informe o número identificador para verificar o seu lugar na lista:</p>
             <form>
-                <input class="text-field" name="id" id="id" />
+                <input class="text-field" name="id" id="id" title="id"/>
                 <button id="check" type="submit">Verificar</button>
             </form>
         </div>

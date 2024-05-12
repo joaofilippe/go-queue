@@ -11,8 +11,8 @@
             "mode": "auto",
             "program": "${workspaceFolder}/main.go",
             "env": {
-                "REDIS_URL": "http://127.0.0.1:6379"
-                // "REDIS_URL": "redis://:p02d4b4c226c0e8917afe3d20762a006c1a3367eadfdeb8a2f7e78fe296998d09@ec2-3-95-86-209.compute-1.amazonaws.com:19249"
+                // "REDIS_URL": "http://127.0.0.1:6379"
+                "REDIS_URL": "redis://:p02d4b4c226c0e8917afe3d20762a006c1a3367eadfdeb8a2f7e78fe296998d09@ec2-3-95-86-209.compute-1.amazonaws.com:19249"
             }
         }
     ]

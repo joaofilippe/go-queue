@@ -6,27 +6,31 @@ import (
 
 	"github.com/labstack/echo/v4"
 
-	"github.com/joaofilippe/go-queue/handlers"
+	"github.com/joaofilippe/go-queue/controller"
 	redisclient "github.com/joaofilippe/go-queue/redis"
 )
 
 func init() {
-	handlers.LoadTemplates()
+	controller.LoadTemplates()
 }
 func main() {
 	ctx := context.Background()
-	handlers.LoadTemplates()
+	controller.LoadTemplates()
 	redisclient.LoadRedisClient(ctx)
 
 	e := echo.New()
-	e.GET("/", handlers.HomeScreen)
-	e.POST("/enter", handlers.EnterOnQueue)
-	e.GET("/queue", handlers.GetQueue)
-	e.GET("/user/:id", handlers.GetPlaceOnListByID)
-	e.GET("/place/:id", handlers.GetPlaceOnListByIDScreen)
-	e.GET("/call", handlers.CallNextScreen)
-	e.GET("/see", handlers.SeePatients)
-	e.DELETE("/call/:code", handlers.CallNext)
+
+	// Handlers
+	e.POST("/enter", controller.EnterOnQueue)
+	e.GET("/queue", controller.GetQueue)
+	e.GET("/user/:id", controller.GetPlaceOnListByID)
+	e.DELETE("/call/:code", controller.CallNext)
+	
+	// Renders
+	e.GET("/", controller.RenderHomeScreen)
+	e.GET("/place/:id", controller.RenderGetPlaceOnListByIDScreen)
+	e.GET("/call", controller.RenderCallNextScreen)
+
 
 	port := os.Getenv("PORT")
 	if port == "" {

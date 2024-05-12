@@ -1,10 +1,9 @@
-package handlers
+package controller
 
 import (
 	"context"
 	"net/http"
 	"strconv"
-	"text/template"
 	"time"
 
 	"github.com/labstack/echo/v4"
@@ -13,26 +12,13 @@ import (
 	redisclient "github.com/joaofilippe/go-queue/redis"
 )
 
-const tPath = "./templates/"
 
 var (
-	tpl       *template.Template
 	adminCode = 5654
 	lastID    = 0
 )
 
-func LoadTemplates() {
-	tpl = template.Must(template.ParseGlob(tPath + "*.html"))
-}
-
-// Screens
-
-// HomeScreen is the home screen
-func HomeScreen(c echo.Context) error {
-	return tpl.ExecuteTemplate(c.Response(), "home.html", nil)
-}
-
-// EnterOnQueue enter on queue
+// EnterOnQueue insert the user on the queue and returns the render of the success screen
 func EnterOnQueue(c echo.Context) error {
 	ctx := context.Background()
 
@@ -127,10 +113,10 @@ func EnterOnQueue(c echo.Context) error {
 		u.Place, _ = queueStd.GetPlaceByID(u.ID)
 	}
 
-	return tpl.ExecuteTemplate(c.Response(), "success.html", u)
+	return RenderSuccessScreen(c, u)
 }
 
-// GetQueue gets the queue
+// GetQueue gets the queue ordered by priority
 func GetQueue(c echo.Context) error {
 	ctx := context.Background()
 	queueStd := redisclient.GetQueueFromRedis(ctx, "standart")
@@ -155,29 +141,6 @@ func GetQueue(c echo.Context) error {
 	return c.JSON(http.StatusFound, message)
 }
 
-// GetPlaceOnListByCPF is a function that returns the position of the user on the list
-func GetPlaceOnListByCPF(c echo.Context) error {
-	ctx := context.Background()
-	cpf := c.Param("cpf")
-	queue := redisclient.GetQueueFromRedis(ctx, "standart")
-	place := queue.GetPlaceByCPF(cpf)
-
-	message := struct {
-		Messsage string `json:"message"`
-		Place    int    `json:"place"`
-	}{}
-
-	if place == -1 {
-		message.Messsage = "User not found"
-		message.Place = -1
-		return c.JSON(http.StatusNotFound, message)
-	}
-
-	message.Messsage = "User found"
-	message.Place = place
-
-	return c.JSON(http.StatusOK, message)
-}
 
 // GetPlaceOnListByID is a function that returns the position of the user on the list
 func GetPlaceOnListByID(c echo.Context) error {
@@ -216,29 +179,7 @@ func GetPlaceOnListByID(c echo.Context) error {
 	return c.JSON(http.StatusOK, message)
 }
 
-// GetPlaceOnListByIDScreen is a function that returns the position of the user on the list
-func GetPlaceOnListByIDScreen(c echo.Context) error {
-	ctx := context.Background()
-	idStr := c.Param("id")
-	id, _ := strconv.Atoi(idStr)
 
-	queueStd := redisclient.GetQueueFromRedis(ctx, "standart")
-	queuePrior := redisclient.GetQueueFromRedis(ctx, "priority")
-	queue := new(models.UserQueue)
-
-	for _, u := range queuePrior.Queue {
-		queue.Queue = append(queue.Queue, u)
-	}
-
-	for _, u := range queueStd.Queue {
-		queue.Queue = append(queue.Queue, u)
-	}
-
-	place, user := queue.GetPlaceByID(id)
-	user.Place = place
-
-	return tpl.ExecuteTemplate(c.Response(), "place.html", &user)
-}
 
 // CallNext calls the next user
 func CallNext(c echo.Context) error {
@@ -277,88 +218,4 @@ func CallNext(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, user)
 
-}
-
-func CallNextScreen(c echo.Context) error {
-	ctx := context.Background()
-
-	queuePrior := redisclient.GetQueueFromRedis(ctx, "priority")
-	queueStd := redisclient.GetQueueFromRedis(ctx, "standart")
-
-	if queuePrior.Len() == 0 && queueStd.Len() == 0 {
-		return tpl.ExecuteTemplate(c.Response(), "empty.html", nil)
-
-	}
-
-	queue := []models.User{}
-	for _, u := range queuePrior.Queue {
-		queue = append(queue, u)
-	}
-
-	for _, u := range queueStd.Queue {
-		queue = append(queue, u)
-	}
-
-	user := queue[0]
-
-	user.Next = queue[1:]
-	return tpl.ExecuteTemplate(c.Response(), "call.html", &user)
-
-}
-
-func SeePatients(c echo.Context) error {
-	ctx := context.Background()
-	queue := redisclient.GetQueueFromRedis(ctx, "standart")
-
-	symptoms := []string{}
-
-	for _, u := range queue.Queue {
-		for _, s := range u.Symptoms {
-			if s == "fever" {
-				symptoms = append(symptoms, "febre")
-			}
-
-			if s == "nausea" {
-				symptoms = append(symptoms, "náusea")
-			}
-
-			if s == "headache" {
-				symptoms = append(symptoms, "dor de cabeça")
-			}
-
-			if s == "heart disease" {
-				symptoms = append(symptoms, "doença cardíaca")
-			}
-
-			if s == "air" {
-				symptoms = append(symptoms, "falta de ar")
-			}
-
-			if s == "throat" {
-				symptoms = append(symptoms, "dor de garganta")
-			}
-
-			if s == "hypertension" {
-				symptoms = append(symptoms, "hipertensão")
-			}
-
-			if s == "low pressure" {
-				symptoms = append(symptoms, "pressão baixa")
-			}
-
-			if s == "vertigo" {
-				symptoms = append(symptoms, "vertigem")
-			}
-
-			if s == "alergy" {
-				symptoms = append(symptoms, "alergia")
-			}
-
-			if s == "diabetes" {
-				symptoms = append(symptoms, "diabetes")
-			}
-		}
-	}
-
-	return tpl.ExecuteTemplate(c.Response(), "request.html", &queue)
 }
